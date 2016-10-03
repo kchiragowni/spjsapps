@@ -1,7 +1,7 @@
 {
-  "name": "react-slingshot",
+  "name": "js-app",
   "version": "5.0.0",
-  "description": "Starter kit for creating apps with React and Redux",
+  "description": "SP JS apps with SP REST, React and Redux",
   "engines": {
     "npm": ">=3"
   },
@@ -26,15 +26,21 @@
     "test:watch": "npm run test -- --watch",
     "open:cover": "npm run test:cover && open coverage/index.html"
   },
-  "author": "Cory House",
+  "author": "Kiran Chiragowni",
   "license": "MIT",
   "dependencies": {
+    "babel-polyfill": "6.16.0",
     "object-assign": "4.1.0",
+    "office-ui-fabric-react": "0.55.2",
     "react": "15.3.1",
     "react-dom": "15.3.1",
     "react-redux": "4.4.5",
     "react-router-redux": "4.0.5",
     "redux": "3.5.2",
+    "redux-devtools": "^3.3.1",
+    "redux-devtools-dock-monitor": "^1.1.1",
+    "redux-devtools-log-monitor": "^1.0.11",
+    "redux-logger": "^2.6.1",
     "redux-thunk": "2.1.0"
   },
   "devDependencies": {
@@ -100,11 +106,10 @@
     "webpack",
     "redux",
     "flux",
-    "boilerplate",
-    "starter"
+    "pnp.js"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/coryhouse/react-slingshot"
+    "url": "https://github.com/kchiragowni/js-app"
   }
 }
