@@ -2,20 +2,24 @@
 import React, { PropTypes } from 'react';
 //import ContractListRow from './ContractListRow';
 import { DetailsList, Selection } from 'office-ui-fabric-react/lib/DetailsList';
+import { MarqueeSelection } from 'office-ui-fabric-react/lib/MarqueeSelection';
+
 const ContractList = ({contracts, renderItemColumn, selectedDetails}) => {
     return ( 
-        <DetailsList
-            items={contracts}
-            setKey={(contract) => contract.id}
-            selection={selectedDetails}
-            onItemInvoked={(contract) => alert(`Item invoked: ${contract.number}`)}
-            onRenderItemColumn={renderItemColumn}
-        />
+        <MarqueeSelection selection={selectedDetails}>
+            <DetailsList
+                items={contracts}
+                setKey='set'
+                selection={selectedDetails}
+                onItemInvoked={(contract) => alert(`Item invoked: ${contract.number}`)}
+                onRenderItemColumn={renderItemColumn}
+            />
+        </MarqueeSelection>
     );
 };
 
 ContractList.propTypes = {
-    contracts: PropTypes.array.isRequired,
+    contracts: PropTypes.object.isRequired,
     renderItemColumn: PropTypes.func,
     selectedDetails: PropTypes.object
 };

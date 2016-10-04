@@ -1,4 +1,4 @@
-//eslint-disable no-unused-vars
+/*eslint-disable no-unused-vars*/
 /*eslint-disable no-console*/
 import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
@@ -16,36 +16,33 @@ class ContractsContainer extends React.Component {
     //private selection: Selection;
     constructor(props, context) {
         super(props, context);
-        this.state = {
-            contracts: {},
-            selectionDetails: '',
+        let _items = Object.assign({}, props.contracts);
+       
+        this.handleChange = this.handleChange.bind(this);
+        //this.onRenderItemColumn = this.onRenderItemColumn.bind(this);
+        this.getSelectionDetails = this.getSelectionDetails.bind(this);
+        this.selection = new Selection({
+            onSelectionChanged: () => this.setState({ selectionDetails: this.getSelectionDetails() })
+        });
+
+         this.state = {
+            contracts: _items,
+            selectionDetails: this.getSelectionDetails(),
             filterValue: 'Filter by contract number',
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.onRenderItemColumn = this.onRenderItemColumn.bind(this);
-        //this.getSelectionDetails = this.getSelectionDetails.bind(this);
-        this.selection = new Selection({
-            onSelectionChanged: () => this.setState({ selectionDetails: 'Selected ' })
-        });
-    }
-    
-    componentWillMount () {
-        this.setState({
-            contracts: Object.assign({}, this.props.contracts) 
-        });
     }
 
     onRenderItemColumn (item, index, column) {
         if (column.isRowHeader) {
-            return `header`;
+            return `Header`;
         } else if (column.key === 'number') {
             return <Link data-selection-invoke={true}>{ item[column.key] }</Link>;
+        } else {
+            return item[column.key];
         }
-
-        return item[column.key];
     }
 
-    /*getSelectionDetails() {
+    getSelectionDetails() {
         let selectionCount = this.selection.getSelectedCount();
 
         switch (selectionCount) {
@@ -56,7 +53,7 @@ class ContractsContainer extends React.Component {
         default:
             return `${ selectionCount } items selected`;
         }
-    }*/
+    }
 
     handleChange (e) {
         let value = e.target.value;
@@ -77,11 +74,11 @@ class ContractsContainer extends React.Component {
                     <input type="text" placeholder={this.state.filterValue} 
                         id="TextField0" className="ms-TextField-field" aria-describedby="TextFieldDescription1" 
                         aria-invalid="false" onChange={this.handleChange} />
-                </div>
-                <ContractList 
-                    contracts={contracts}
-                    selectedDetails={this.selection}
-                    renderItemColumn={this.onRenderItemColumn} />
+                </div>                
+                    <ContractList 
+                        contracts={contracts}
+                        selectedDetails={this.selection}
+                        renderItemColumn={this.onRenderItemColumn.bind(this)} />
             </div>
         );
     }   
