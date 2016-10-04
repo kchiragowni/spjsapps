@@ -3,12 +3,12 @@ import 'babel-polyfill';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { loadContracts } from './actions/contractActions';
+import { loadRemoteContracts } from './actions/contractActions';
 import App from './containers/App';
 import configureStore from './store/configureStore';
 import '../node_modules/office-ui-fabric-react/dist/css/fabric.min.css';
 const store = configureStore();
-store.dispatch(loadContracts());
+store.dispatch(loadRemoteContracts());
 
 const rootEl = document.getElementById('app');
 

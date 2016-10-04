@@ -18,54 +18,54 @@ class ContractsContainer extends React.Component {
         super(props, context);
         let _items = Object.assign({}, props.contracts);
        
-        this.handleChange = this.handleChange.bind(this);
-        //this.onRenderItemColumn = this.onRenderItemColumn.bind(this);
-        this.getSelectionDetails = this.getSelectionDetails.bind(this);
-        this.selection = new Selection({
-            onSelectionChanged: () => this.setState({ selectionDetails: this.getSelectionDetails() })
+        this._handleChange = this._handleChange.bind(this);
+        this._getSelectionDetails = this._getSelectionDetails.bind(this);
+        this._selection = new Selection({
+            onSelectionChanged: () => this.setState({ selectionDetails: this._getSelectionDetails() })
         });
 
-         this.state = {
+        this.state = {
             contracts: _items,
-            selectionDetails: this.getSelectionDetails(),
+            selectionDetails: this._getSelectionDetails(),
             filterValue: 'Filter by contract number',
         };
     }
 
-    onRenderItemColumn (item, index, column) {
+    _onRenderItemColumn (item, index, column) {
         if (column.isRowHeader) {
             return `Header`;
-        } else if (column.key === 'number') {
+        } else if (column.key === 'Title') {
             return <Link data-selection-invoke={true}>{ item[column.key] }</Link>;
         } else {
             return item[column.key];
         }
     }
 
-    getSelectionDetails() {
-        let selectionCount = this.selection.getSelectedCount();
+    _getSelectionDetails() {
+        let selectionCount = this._selection.getSelectedCount();
 
         switch (selectionCount) {
         case 0:
             return 'No items selected';
         case 1:
-            return '1 item selected: ' + (this.selection.getSelection()[0]).number;
+            return '1 item selected: ' + (this._selection.getSelection()[0]).Title;
         default:
             return `${ selectionCount } items selected`;
         }
     }
 
-    handleChange (e) {
+    _handleChange (e) {
+        e.preventDefault();
         let value = e.target.value;
         let { contracts } = this.props;
         this.setState(
         { 
-            contracts: value ? contracts.filter(i => i.contractingOfficer.toLowerCase().indexOf(value) > -1) : contracts 
+            contracts: value ? contracts.filter(i => i.Title.toLowerCase().indexOf(value) > -1) : contracts 
         });
     }    
 
     render() {
-        let { contracts } = this.state;
+        let { contracts } = this.props;
         let { selectionDetails } = this.state;
         return (
             <div className="ms-Grid-row"> 
@@ -73,28 +73,19 @@ class ContractsContainer extends React.Component {
                 <div className="ms-TextField">
                     <input type="text" placeholder={this.state.filterValue} 
                         id="TextField0" className="ms-TextField-field" aria-describedby="TextFieldDescription1" 
-                        aria-invalid="false" onChange={this.handleChange} />
+                        aria-invalid="false" onChange={this._handleChange} />
                 </div>                
                     <ContractList 
                         contracts={contracts}
-                        selectedDetails={this.selection}
-                        renderItemColumn={this.onRenderItemColumn.bind(this)} />
+                        selectedDetails={this._selection}
+                        renderItemColumn={this._onRenderItemColumn.bind(this)} />
             </div>
         );
     }   
 }
 
 ContractsContainer.propTypes = {
-    contracts: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.number.isRequired,
-            number: PropTypes.string.isRequired, 
-            contractingOfficer: PropTypes.string.isRequired,
-            startDate: PropTypes.string.isRequired,
-            endDate: PropTypes.string.isRequired,
-            ceilingValue: PropTypes.number.isRequired
-        }).isRequired
-    ).isRequired,
+    contracts: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
 };
 
