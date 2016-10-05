@@ -1,3 +1,4 @@
 export default {
-    contracts: []
+    contracts: [],
+    categories: []
 };

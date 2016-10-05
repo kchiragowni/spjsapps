@@ -68,17 +68,19 @@ class ContractsContainer extends React.Component {
         let { contracts } = this.props;
         let { selectionDetails } = this.state;
         return (
-            <div className="ms-Grid-row"> 
-                <div>{selectionDetails}</div>               
-                <div className="ms-TextField">
-                    <input type="text" placeholder={this.state.filterValue} 
-                        id="TextField0" className="ms-TextField-field" aria-describedby="TextFieldDescription1" 
-                        aria-invalid="false" onChange={this._handleChange} />
-                </div>                
-                    <ContractList 
-                        contracts={contracts}
-                        selectedDetails={this._selection}
-                        renderItemColumn={this._onRenderItemColumn.bind(this)} />
+            <div className="ms-Grid-row">
+                <div className="ms-Grid-col ms-u-sm12 ms-u-lg12">
+                    <div>{selectionDetails}</div>               
+                    <div className="ms-TextField">
+                        <input type="text" placeholder={this.state.filterValue} 
+                            id="TextField0" className="ms-TextField-field" aria-describedby="TextFieldDescription1" 
+                            aria-invalid="false" onChange={this._handleChange} />
+                    </div>                
+                        <ContractList 
+                            contracts={contracts}
+                            selectedDetails={this._selection}
+                            renderItemColumn={this._onRenderItemColumn.bind(this)} />
+                </div>
             </div>
         );
     }   
