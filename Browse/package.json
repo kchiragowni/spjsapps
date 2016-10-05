@@ -1,5 +1,5 @@
 {
-  "name": "js-app",
+  "name": "spjsapps",
   "version": "5.0.0",
   "description": "SP JS apps with SP REST, React and Redux",
   "engines": {
