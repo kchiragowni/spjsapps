@@ -15,11 +15,12 @@ import { DocumentCard,
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 
+import classNames from 'classnames';
 
 //const ROWS_PER_PAGE = 3;
 //const MAX_ROW_HEIGHT = 150;
 
-class BespokePivot extends React.Component {
+class CategoriesPivot extends React.Component {
     constructor(props) {
         super(props);
         
@@ -28,6 +29,7 @@ class BespokePivot extends React.Component {
         this.state = {
             filterText: '',
             categories: props.categories,
+            group: props.group,
             showDialog: false
         };
     }
@@ -50,27 +52,19 @@ class BespokePivot extends React.Component {
     }
 
     render() {        
-        let { categories: originalItems } = this.props;
+        //let { categories: originalItems } = this.props;
         let { categories } = this.state.categories.length ==0 ? this.props : this.state;
-        let resultCountText = categories.length === originalItems.length ? '' : ` (${ categories.length } of ${ originalItems.length } shown)`;
-
-        let previewProps = {
-            previewImages: [
-                {
-                name: 'Revenue stream proposal fiscal year 2016 version02.pptx',
-                url: 'http://bing.com',
-                previewImageSrc: '/Modules/DevOffice.Fabric/dist/document-preview.png',
-                iconSrc: '/Modules/DevOffice.Fabric/dist/icon-ppt.png',
-                width: 144,
-                height: 106
-                }
-            ],
-        };
-
+        //let resultCountText = categories.length === originalItems.length ? '' : ` (${ categories.length } of ${ originalItems.length } shown)`;
+        var masonaryClass = classNames({
+            'masonry bordered' :  true,
+            'bespoke': this.props.group === 'bespoke',
+            'course': this.props.group === 'course',
+            'topic': this.props.group === 'topic'
+        });
         return (
             <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 wrapper">
                 <br/>
-                <div className="masonry bordered">                    
+                <div className={masonaryClass}>                    
                 {categories.map(category => 
                     <div key={category.ID} className="item">
                         <div className="category-content" onClick={this._showDialog.bind(this)}>
@@ -101,8 +95,9 @@ class BespokePivot extends React.Component {
     }    
 }
 
-BespokePivot.propTypes = {
-    categories: PropTypes.array.isRequired
+CategoriesPivot.propTypes = {
+    categories: PropTypes.array.isRequired,
+    group: PropTypes.string.isRequired
 };
 
-export default BespokePivot;
+export default CategoriesPivot;

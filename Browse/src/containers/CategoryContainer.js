@@ -15,16 +15,18 @@ class CategoryContainer extends React.Component {
     }
 
      render() {
-            let {categories} = this.props;
+            let {categories, category} = this.props;
             return(
-                <CategoryPivot categories={categories}/>
+                <CategoryPivot categories={categories} category={category}/>
             );
         }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownprops) {
+    console.log(JSON.stringify(ownprops));
     return {
-        categories: state.categories
+        categories: state.categories,
+        category: 'course'
     };
 }
 

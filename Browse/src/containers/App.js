@@ -10,7 +10,6 @@ const App = () => {
         <div>  
             <div className="ms-Grid"> 
                 <HeroContainer />
-                <h2>Browse by category</h2> 
                 <CategoryContainer />
             </div>
         </div>
