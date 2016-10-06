@@ -21,7 +21,7 @@ class AdvancedSearch extends React.Component {
     };
     return (
         <div>
-            <div className="ms-Grid-col ms-u-sm7 ms-u-md7 ms-u-lg7">
+            <div className="ms-Grid-col ms-u-sm8 ms-u-md8 ms-u-lg8">
                 <Button 
                     description="Opens the Advanced Search Dialog" 
                     buttonType= {ButtonType.normal}
@@ -65,7 +65,7 @@ class AdvancedSearch extends React.Component {
                 </DialogFooter>
                 </Dialog>
             </div>
-            <div className="ms-Grid-col ms-u-sm5 ms-u-md5 ms-u-lg5 ms-u-textAlignLeft" style={linkDivStyle}>
+            <div className="ms-Grid-col ms-u-sm4 ms-u-md4 ms-u-lg4 ms-u-textAlignLeft" style={linkDivStyle}>
                 <Link
                     href="http://dev.office.com/fabric/components/link">
                     <i className="ms-Icon ms-Icon--Help ms-font-xs" aria-hidden="true"></i> search tips 

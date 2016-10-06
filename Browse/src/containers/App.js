@@ -9,8 +9,8 @@ const App = () => {
     return(
         <div>  
             <div className="ms-Grid"> 
-                 <HeroContainer />
-                 
+                <HeroContainer />
+                <h2>Browse by category</h2> 
                 <CategoryContainer />
             </div>
         </div>

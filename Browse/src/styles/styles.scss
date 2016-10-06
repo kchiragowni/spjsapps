@@ -4,6 +4,7 @@ $vin-green: #60b044;
 $vin-red: #ff0000;
 $accent-red: #ce4b1f;
 $line-height: 20px;
+$vin-orangeLighter: #ff8c00;
 
 /* Styles */
 
@@ -14,33 +15,78 @@ input.small { width: 46px; }
 td.fuel-savings-label { width: 175px; }
 */
 
-.ms-SearchBox-field { z-index: 0;}
-.ms-DocumentCard--compact { margin-bottom: 20px;}
+.searchbox {
+    padding: 1em;
+    .ms-SearchBox-field { z-index: 0;}
+}
 
-*, *:before, *:after {box-sizing:  border-box !important;}
 
-.bespoke {
-    .categories {
-        /*list-style-type: none;
-        padding: 0;
-        margin-top: $line-height;
-        float: left;*/
-        -moz-column-width: 13em;
-        -webkit-column-width: 15em;
-        -moz-column-gap: 1em;
-        -webkit-column-gap: 1em;
-        padding: 0; 
+.wrapper {
+    width: 92.5%;
+    padding: 1em;
+}
 
-        .category {
-            display: inline-block;
-            margin:  0.25rem;
-            padding:  1rem;
-            width:  100%; 
-            background:  #f3f3f3;
-            border-bottom: 3px solid $accent-red;
-            :hover{
-                cursor: pointer;
-            }
-        }
-    }
+.masonry {
+    -moz-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+    -moz-column-gap: 30px;
+    -webkit-column-gap: 30px;
+    column-gap: 30px;
+    -moz-column-fill: initial;
+    -webkit-column-fill: initial;
+    column-fill: initial;
+}
+.masonry .item {
+    margin-bottom: 30px;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+.masonry .item .category-content {
+    -moz-transition: all .5s ease-in-out;
+    -webkit-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+.masonry .item:hover .category-content {
+    opacity: .75;
+    cursor: pointer;
+}
+.masonry.bordered {
+    -moz-column-rule: 1px solid $vin-orangeLighter;
+    -webkit-column-rule: 1px solid $vin-orangeLighter;
+    column-rule: 1px solid $vin-orangeLighter;
+    -moz-column-gap: 50px;
+    -webkit-column-gap: 50px;
+    column-gap: 50px;
+}
+.masonry.bordered .item {
+    padding-bottom: 25px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid $vin-orangeLighter;
+}
+
+@media only screen and (min-width: 1024px) {
+  .wrapper {
+    width: 80%;
+    padding: 1em; /*2em*/
+  }
+
+  .masonry {
+    -moz-column-count: 3;
+    -webkit-column-count: 3;
+    column-count: 3;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+  .wrapper {
+    width: 85%;
+    padding: 1.5em;
+  }
+
+  .masonry {
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    column-count: 2;
+  }
 }

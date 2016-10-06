@@ -68,27 +68,21 @@ class BespokePivot extends React.Component {
         };
 
         return (
-            <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 bespoke">
+            <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 wrapper">
                 <br/>
-                <ul className="categories">                    
+                <div className="masonry bordered">                    
                 {categories.map(category => 
-                    <li key={category.id} className="category">
-                        <div onClick={this._showDialog.bind(this)}>
-                            <div className="category-title">
-                                <h3>{category.Title}</h3>
-                            </div>
-                            <p>
-                                {category.Description}
-                            </p>
-                            <div className="category-info">
-                                <span className="category-count">
-                                    {category.ResourcesCount}
-                                </span>
+                    <div key={category.ID} className="item">
+                        <div className="category-content" onClick={this._showDialog.bind(this)}>
+                            <h3 className="ms-fontSize-mPlus ms-fontWeight-semibold">{category.Title}</h3>
+                            <div className="ms-fontSize-mPlus">{category.Description}</div>
+                            <div className="ms-fontSize-mPlus ms-u-textAlignRight">
+                                {category.ResourcesCount}
                             </div>
                         </div> 
-                    </li>
+                    </div>
                 )}
-                </ul>
+                </div>
                 <Dialog
                     isOpen={this.state.showDialog}
                     type={DialogType.close}
