@@ -1,0 +1,46 @@
+/* Variables */
+$vin-blue: #5bb7db;
+$vin-green: #60b044;
+$vin-red: #ff0000;
+$accent-red: #ce4b1f;
+$line-height: 20px;
+
+/* Styles */
+
+/*
+.savings { color: $vin-green; }
+.loss { color: $vin-red; }
+input.small { width: 46px; }
+td.fuel-savings-label { width: 175px; }
+*/
+
+.ms-SearchBox-field { z-index: 0;}
+.ms-DocumentCard--compact { margin-bottom: 20px;}
+
+*, *:before, *:after {box-sizing:  border-box !important;}
+
+.bespoke {
+    .categories {
+        /*list-style-type: none;
+        padding: 0;
+        margin-top: $line-height;
+        float: left;*/
+        -moz-column-width: 13em;
+        -webkit-column-width: 15em;
+        -moz-column-gap: 1em;
+        -webkit-column-gap: 1em;
+        padding: 0; 
+
+        .category {
+            display: inline-block;
+            margin:  0.25rem;
+            padding:  1rem;
+            width:  100%; 
+            background:  #f3f3f3;
+            border-bottom: 3px solid $accent-red;
+            :hover{
+                cursor: pointer;
+            }
+        }
+    }
+}

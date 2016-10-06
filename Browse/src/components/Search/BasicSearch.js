@@ -4,15 +4,10 @@ import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 
 const SearchComponent = () => {
     return (
-        <div className="ms-Gridrow">
+        <div 
+            className="ms-Gridrow">
             <SearchBox 
-                labelText= 'Search resource..'
-                className="ms-SearchBoxSmall"
-                onChange={
-                    (newValue) => {
-                        console.log('Search box value changed to: ' + newValue);
-                    }
-                }
+                labelText= "Search resource.."
             />
         </div>
     );

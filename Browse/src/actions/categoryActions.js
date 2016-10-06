@@ -19,11 +19,11 @@ export function loadCategories() {
 }
 
 export function loadRemoteCategories(){ 
-    let columns = ['Title']; 
+    let columns = ['Title', 'Description', 'Group', 'ResourcesCount']; 
     return function (dispatch) {
-        return services.getRequest('Contracts', columns)
-            .then((contracts) => {
-                dispatch(loadCategoriesSuccess(contracts));
+        return services.getRequest('Navigation', columns)
+            .then((categories) => {
+                dispatch(loadCategoriesSuccess(categories));
             })
             .catch((error) => {
                 throw error;

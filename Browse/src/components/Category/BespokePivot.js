@@ -11,6 +11,11 @@ import { DocumentCard,
   IDocumentCardPreviewProps,
   DocumentCardType
 } from 'office-ui-fabric-react/lib/DocumentCard';
+
+import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
+import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
+
+
 //const ROWS_PER_PAGE = 3;
 //const MAX_ROW_HEIGHT = 150;
 
@@ -22,7 +27,8 @@ class BespokePivot extends React.Component {
 
         this.state = {
             filterText: '',
-            categories: props.categories
+            categories: props.categories,
+            showDialog: false
         };
     }
 
@@ -33,6 +39,14 @@ class BespokePivot extends React.Component {
             filterText: text,
             categories: text ? categories.filter(category => category.number.toLowerCase().indexOf(text.toLowerCase()) >= 0) : categories
         });
+    }
+
+    _showDialog() {
+        this.setState( {showDialog: true } );
+    }
+
+    _closeDialog() {
+        this.setState( {showDialog: false } );
     }
 
     render() {        
@@ -53,33 +67,41 @@ class BespokePivot extends React.Component {
             ],
         };
 
-
         return (
-            <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
+            <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12 bespoke">
                 <br/>
+                <ul className="categories">                    
                 {categories.map(category => 
-                    <div className="ms-Grid-col ms-u-sm4 ms-u-md4 ms-u-lg4">
-                        <DocumentCard                            
-                            type={DocumentCardType.compact} 
-                            onClickHref='#'
-                            accentColor='#ce4b1f'
-                            style={{marginBottom:'10px'}}>
-                            <div className='ms-DocumentCard-details'>
-                                <DocumentCardTitle
-                                title= {category.number}
-                                shouldTruncate={true}/>
-                                <DocumentCardActivity
-                                activity='Created a few minutes ago'
-                                people={
-                                    [
-                                    { name: 'Kat Larrson', profileImageSrc: '/Modules/DevOffice.Fabric/images/persona-female.png' }
-                                    ]
-                                }
-                                />
+                    <li key={category.id} className="category">
+                        <div onClick={this._showDialog.bind(this)}>
+                            <div className="category-title">
+                                <h3>{category.Title}</h3>
                             </div>
-                            </DocumentCard>
-                    </div>    
+                            <p>
+                                {category.Description}
+                            </p>
+                            <div className="category-info">
+                                <span className="category-count">
+                                    {category.ResourcesCount}
+                                </span>
+                            </div>
+                        </div> 
+                    </li>
                 )}
+                </ul>
+                <Dialog
+                    isOpen={this.state.showDialog}
+                    type={DialogType.close}
+                    isDarkOverlay={true}
+                    onDismiss={this._closeDialog.bind(this)}
+                    title="All emails together"
+                    subText="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
+                    isBlocking={true}
+                    closeButtonAriaLabel="Close"
+                    >
+                        <div>Dialog content...</div>
+                    
+                </Dialog>
             </div>
         );
     }    

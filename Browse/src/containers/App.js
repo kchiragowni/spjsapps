@@ -10,13 +10,7 @@ const App = () => {
         <div>  
             <div className="ms-Grid"> 
                  <HeroContainer />
-                 <br/>
-                 <div className="ms-Grid-row">
-                    <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
-                        <h2 className="ms-font-xl">Browse by Category</h2>
-                    </div>
-                </div>
-                <hr/>
+                 
                 <CategoryContainer />
             </div>
         </div>

@@ -8,6 +8,7 @@ class AdvancedSearch extends React.Component {
 
   constructor() {
     super();
+    this._showDialog = this._showDialog.bind(this);
     this.state = {
       showDialog: false
     };
@@ -24,14 +25,20 @@ class AdvancedSearch extends React.Component {
                 <Button 
                     description="Opens the Advanced Search Dialog" 
                     buttonType= {ButtonType.normal}
-                    onClick={this._showDialog.bind(this)}>Advanced Search</Button>
+                    onClick={(ev) => {
+                        ev.preventDefault();
+                        this._showDialog();}}
+                    onLayerMounted={( )=> {return true;}}
+                    >
+                    Advanced Search
+                </Button>
                 <Dialog
-                isOpen={this.state.showDialog}
-                type={DialogType.normal}
-                onDismiss={this._closeDialog.bind(this)}
-                title="Advanced Search"
-                subText="Find documents that have.."
-                isBlocking={false}
+                    isOpen={this.state.showDialog}
+                    type={DialogType.close}
+                    onDismiss={this._closeDialog.bind(this)}
+                    title="Advanced Search"
+                    subText="Find documents that have.."
+                    isBlocking={false}
                 >
                 <ChoiceGroup
                     options={ [
