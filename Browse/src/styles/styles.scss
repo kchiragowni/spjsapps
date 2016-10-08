@@ -10,6 +10,12 @@ $vin-blueLight:	#00bcf2;
 $vin-neutralLight: #eaeaea;
 $vin-tealLight:	#00B294;
 
+$vin-orangePantone: #FF5427;
+$vin-purplePantone: #AE20AE;
+$vin-bluePantone: #37C5F7;
+$vin-greenPantone: #1CD164;
+
+
 /* Styles */
 
 /*
@@ -23,7 +29,34 @@ td.fuel-savings-label { width: 175px; }
     padding: 1em;
     .ms-SearchBox-field { z-index: 0;}
 }
+/* Pivot */
+.ms-Pivot {
+    border-bottom: 2px solid #f3f3f3;
+}
+.ms-Pivot {
+    a {
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}
+.ms-Pivot-link {
+    &::before{
+        bottom: -5px;
+        left: 0;
+        right: 0;
+    }
+}
 
+.bespoke .ms-Pivot-link.is-selected::before {
+    background-color: $vin-orangePantone;
+}
+.course .ms-Pivot-link.is-selected::before {
+    background-color: $vin-bluePantone;
+}
+.topic .ms-Pivot-link.is-selected::before {
+    background-color: $vin-purplePantone;
+}
 
 .wrapper {
     width: 92.5%;
@@ -53,6 +86,8 @@ td.fuel-savings-label { width: 175px; }
         &:hover .category-content {
             opacity: .75;
             cursor: pointer;
+            padding: 5px;
+            background-color: #f3f3f3;
         }
     }
     &.bordered {
@@ -60,19 +95,19 @@ td.fuel-savings-label { width: 175px; }
         -webkit-column-gap: 50px;
         column-gap: 50px;
         &.bespoke {
-            -moz-column-rule: 1px solid $vin-purpleLight;
-            -webkit-column-rule: 1px solid $vin-purpleLight;
-            column-rule: 1px solid $vin-purpleLight;
+            -moz-column-rule: 1px solid $vin-orangePantone;
+            -webkit-column-rule: 1px solid $vin-orangePantone;
+            column-rule: 1px solid $vin-orangePantone;
         }
         &.course {
-            -moz-column-rule: 1px solid $vin-orangeLighter;
-            -webkit-column-rule: 1px solid $vin-orangeLighter;
-            column-rule: 1px solid $vin-orangeLighter;
+            -moz-column-rule: 1px solid $vin-bluePantone;
+            -webkit-column-rule: 1px solid $vin-bluePantone;
+            column-rule: 1px solid $vin-bluePantone;
         }
         &.topic {
-            -moz-column-rule: 1px solid $vin-tealLight;
-            -webkit-column-rule: 1px solid $vin-tealLight;
-            column-rule: 1px solid $vin-tealLight;
+            -moz-column-rule: 1px solid $vin-purplePantone;
+            -webkit-column-rule: 1px solid $vin-purplePantone;
+            column-rule: 1px solid $vin-purplePantone;
         }
     }
 }
@@ -82,13 +117,13 @@ td.fuel-savings-label { width: 175px; }
     margin-bottom: 25px;    
 }
 .masonry.bordered.bespoke .item {
-    border-bottom: 1px solid $vin-purpleLight;
+    border-bottom: 1px solid $vin-orangePantone;
 }
 .masonry.bordered.course .item {
-    border-bottom: 1px solid $vin-orangeLighter;
+    border-bottom: 1px solid $vin-bluePantone;
 }
 .masonry.bordered.topic .item {
-    border-bottom: 1px solid $vin-tealLight;
+    border-bottom: 1px solid $vin-purplePantone;
 }
 @media only screen and (min-width: 1024px) {
   .wrapper {

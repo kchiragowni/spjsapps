@@ -22,8 +22,7 @@ class CategoryContainer extends React.Component {
         }
 }
 
-function mapStateToProps(state, ownprops) {
-    console.log(JSON.stringify(ownprops));
+function mapStateToProps(state) {
     return {
         categories: state.categories,
         category: 'course'

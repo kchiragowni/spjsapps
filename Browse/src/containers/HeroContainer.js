@@ -14,14 +14,12 @@ class HeroContainer extends React.Component {
      render() {
             return(
                 <div className="ms-Grid-row searchbox">
-                    <div className="ms-Grid-col ms-u-sm1 ms-u-lg1">&nbsp;</div>
-                    <div className="ms-Grid-col ms-u-sm7 ms-u-lg7">
+                    <div className="ms-Grid-col ms-u-sm8 ms-u-lg87">
                         <BasicSearch/>
                     </div>
-                     <div className="ms-Grid-col ms-u-sm3 ms-u-lg3">
+                     <div className="ms-Grid-col ms-u-sm4 ms-u-l4">
                         <AdvancedSearch/>
                     </div>
-                    <div className="ms-Grid-col ms-u-sm1 ms-u-lg1">&nbsp;</div>
                 </div>
             );
         }
