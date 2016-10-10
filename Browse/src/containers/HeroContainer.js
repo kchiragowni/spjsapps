@@ -3,8 +3,9 @@ import React from 'react';
 //import { bindActionCreators } from 'redux';
 //import * as actions from '../actions/categoryActions';
 //import objectAssign from 'object-assign';
-import BasicSearch from '../components/Search/BasicSearch';
+//import BasicSearch from '../components/Search/BasicSearch';
 import AdvancedSearch from '../components/Search/AdvancedSearch';
+import SearchExtended from '../components/Search/SearchExtended';
 
 class HeroContainer extends React.Component {
     constructor(props, context){
@@ -15,7 +16,7 @@ class HeroContainer extends React.Component {
             return(
                 <div className="ms-Grid-row searchbox">
                     <div className="ms-Grid-col ms-u-sm8 ms-u-lg87">
-                        <BasicSearch/>
+                        <SearchExtended/>
                     </div>
                      <div className="ms-Grid-col ms-u-sm4 ms-u-l4">
                         <AdvancedSearch/>
