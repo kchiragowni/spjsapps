@@ -67,23 +67,23 @@ class CategoryPivot extends React.Component {
                             onLinkClick={(item) => {this._groupSelected(item);}}>
                             <PivotItem 
                                 linkText="Bespoke" 
-                                ariaLabel="Bespoke category"
+                                ariaLabel='Bespoke category'
                                 itemCount={_besokeCategories.length}
-                                itemKey='bespoke'>
+                                itemKey="bespoke">
                                 <CategoriesPivot categories={_besokeCategories} group={'bespoke'}/>
                             </PivotItem>
                             <PivotItem 
                                 linkText="Course" 
-                                ariaLabel="Course category"
+                                ariaLabel='Course category'
                                 itemCount={_courseCategories.length}
-                                itemKey='course'>
+                                itemKey="course">
                                 <CategoriesPivot categories={_courseCategories} group={'course'}/>
                             </PivotItem>
                             <PivotItem 
                                 linkText="Topics" 
-                                ariaLabel="Topics category"
+                                ariaLabel='Topics category'
                                 itemCount={_topicsCategories.length}
-                                itemKey='topic'>
+                                itemKey="topic">
                                 <CategoriesPivot categories={_topicsCategories} group={'topic'}/>
                             </PivotItem>
                         </Pivot>
@@ -95,8 +95,7 @@ class CategoryPivot extends React.Component {
 }
 
 CategoryPivot.propTypes = {
-    categories: PropTypes.array.isRequired,
-    category: PropTypes.string
+    categories: PropTypes.array.isRequired
 };
 
 export default CategoryPivot;

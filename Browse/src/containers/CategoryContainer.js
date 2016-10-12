@@ -15,9 +15,9 @@ class CategoryContainer extends React.Component {
     }
 
      render() {
-            let {categories, category} = this.props;
+            let {categories} = this.props;
             return(
-                <CategoryPivot categories={categories} category={category}/>
+                <CategoryPivot categories={categories}/>
             );
         }
 }
