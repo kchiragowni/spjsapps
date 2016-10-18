@@ -1,4 +1,4 @@
-/*eslint-disable no-unused-var*/
+/*eslint-disable no-unused-vars*/
 import React, {PropTypes} from 'react';
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 import classNames from 'classnames';
@@ -57,6 +57,7 @@ class SearchExtended extends React.Component {
     } 
 
     _onChange (e) {
+        console.log(e.target.value);
         this.setState({
             value: e.target.value
         });

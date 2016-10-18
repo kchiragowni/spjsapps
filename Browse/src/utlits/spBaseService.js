@@ -18,3 +18,21 @@ export function getRequest(listTitle, columns) {
             });
 }
 
+export function getSearchResult() {
+    let queryText = {
+        'QueryText': 'Validity'
+    };
+    return pnp.sp.search
+            .execute(queryText)
+            .get(undefined, {
+                headers: {
+                    'Accept': 'application/json;odata=nometadata'
+                }
+            })
+            .then((results) => {
+                return results;
+            })
+            .catch((error) => {
+                throw error;
+            });
+}
