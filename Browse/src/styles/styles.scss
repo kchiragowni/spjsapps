@@ -29,6 +29,34 @@ td.fuel-savings-label { width: 175px; }
     padding: 1em;
     .ms-SearchBox-field { z-index: 0;}
 }
+
+
+.query-suggestions {
+    border: 1px solid #2a8dd4;
+    margin: -1px 0 0 0;
+    visibility: visible;
+    position: absolute;
+    background-color: #ffffff;
+    z-index: 1000;
+    display: block;
+    width: 95.2%;
+    padding: 2% 1%;
+}
+
+.query-suggestions-list {
+    cursor: default;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.query-suggestions-list-item {
+    margin: 0;
+    padding: 7px 10px;
+}
+
 /* Pivot */
 .ms-Pivot {
     border-bottom: 2px solid #f3f3f3;

@@ -1,34 +1,36 @@
-import React from 'react';
-//import { connect } from 'react-redux';
-//import { bindActionCreators } from 'redux';
-//import * as actions from '../actions/categoryActions';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from '../actions/queryActions';
 //import objectAssign from 'object-assign';
-//import BasicSearch from '../components/Search/BasicSearch';
+import BasicSearch from '../components/Search/BasicSearch';
 import AdvancedSearch from '../components/Search/AdvancedSearch';
-import SearchExtended from '../components/Search/SearchExtended';
 
 class HeroContainer extends React.Component {
     constructor(props, context){
         super(props, context);
     }
 
-     render() {
-            return(
-                <div className="ms-Grid-row searchbox">
-                    <div className="ms-Grid-col ms-u-sm8 ms-u-lg87">
-                        <SearchExtended/>
-                    </div>
-                     <div className="ms-Grid-col ms-u-sm4 ms-u-l4">
-                        <AdvancedSearch/>
-                    </div>
+    render() {
+        let {suggestions} = this.props;
+        return(
+            <div className="ms-Grid-row searchbox">
+                <div className="ms-Grid-col ms-u-sm8 ms-u-lg87">
+                    <BasicSearch
+                        suggestions={suggestions}
+                        getSuggestions={this.props.actions.loadQuerySuggestions()}/>
                 </div>
-            );
-        }
+                    <div className="ms-Grid-col ms-u-sm4 ms-u-l4">
+                    <AdvancedSearch/>
+                </div>
+            </div>
+        );
+    }
 }
 
-/*function mapStateToProps(state) {
+function mapStateToProps(state) {
     return {
-        categories: state.categories
+        suggestions: state.querySuggestions
     };
 }
 
@@ -38,13 +40,14 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-CategoryContainer.propTypes = {
-    categories: PropTypes.array.isRequired
+HeroContainer.propTypes = {
+    suggestions: PropTypes.array.isRequired,
+    actions: PropTypes.array.isRequired
 };
 
 export default connect(
     mapStateToProps, 
     mapDispatchToProps
-)(CategoryContainer);*/
+)(HeroContainer);
 
-export default HeroContainer;
+//export default HeroContainer;
