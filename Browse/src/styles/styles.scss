@@ -30,11 +30,22 @@ td.fuel-savings-label { width: 175px; }
     .ms-SearchBox-field { z-index: 0;}
 }
 
+.ms-SearchBox {
+    margin-bottom: 0;
+}
+
+.hidden {
+    visibility: hidden !important;
+}
+
+.visible {
+    visibility: visible !important;
+}
 
 .query-suggestions {
     border: 1px solid #2a8dd4;
     margin: -1px 0 0 0;
-    visibility: visible;
+    visibility: hidden;
     position: absolute;
     background-color: #ffffff;
     z-index: 1000;

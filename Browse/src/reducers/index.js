@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import contracts from './contractReducer';
 import categories from './categoryReducer';
-import { querySuggestionsReducer as querySuggestions } from './queryReducer';
+import querySuggestions from './queryReducer';
 
 const rootReducer = combineReducers({
   contracts,

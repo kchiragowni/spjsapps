@@ -55,7 +55,7 @@ class CategoriesPivot extends React.Component {
         //let { categories: originalItems } = this.props;
         let { categories } = this.state.categories.length ==0 ? this.props : this.state;
         //let resultCountText = categories.length === originalItems.length ? '' : ` (${ categories.length } of ${ originalItems.length } shown)`;
-        var masonaryClass = classNames({
+        let masonaryClass = classNames({
             'masonry bordered' :  true,
             'bespoke': this.props.group === 'bespoke',
             'course': this.props.group === 'course',

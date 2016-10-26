@@ -18,7 +18,7 @@ class HeroContainer extends React.Component {
                 <div className="ms-Grid-col ms-u-sm8 ms-u-lg87">
                     <BasicSearch
                         suggestions={suggestions}
-                        getSuggestions={this.props.actions.loadQuerySuggestions()}/>
+                        getSuggestions={this.props.actions.loadQuerySuggestions}/>
                 </div>
                     <div className="ms-Grid-col ms-u-sm4 ms-u-l4">
                     <AdvancedSearch/>
@@ -42,7 +42,7 @@ function mapDispatchToProps(dispatch) {
 
 HeroContainer.propTypes = {
     suggestions: PropTypes.array.isRequired,
-    actions: PropTypes.array.isRequired
+    actions: PropTypes.object.isRequired
 };
 
 export default connect(

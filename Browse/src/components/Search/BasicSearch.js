@@ -5,6 +5,7 @@ import { List } from 'office-ui-fabric-react/lib/List';
 import { FocusZone, FocusZoneDirection } from 'office-ui-fabric-react/lib/FocusZone';
 //import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 //import SearchExtended from './SearchExtended';
+import classNames from 'classnames';
 class BasicSearch extends React.Component {
     constructor(props){
         super(props);
@@ -17,9 +18,16 @@ class BasicSearch extends React.Component {
             query: ''
         };
     }
+
+    componentWillReceiveProps(nextPrpos) {
+        this.setState({
+            suggestions: nextPrpos.suggestions
+        });
+    }
+
     _onChange(value) {        
         /*eslint-disable no-console*/
-        console.log('Search box value changed to: ' + value);
+        //console.log('Search box value changed to: ' + value);
         /*
         e.preventDefault();
         if (!e) e = window.event;
@@ -30,8 +38,12 @@ class BasicSearch extends React.Component {
             return false;
         }*/
 
+        this.setState({
+            query: value
+        });
+
         if(value.length > 3) {
-            this.props.getSuggestions();
+            this.props.getSuggestions(value);
         }
     }
     search(ele) {
@@ -43,21 +55,11 @@ class BasicSearch extends React.Component {
     }
 
     render() {
-
-        let searchSuggestions = [
-            {
-                term: 'Cambridge Approach',
-                key: 'cambridge-approach'                
-            },
-            {
-                term: 'CII',
-                key: 'cii'                
-            },
-            {
-                term: 'Course Specification',
-                key: 'course-specification'                
-            }
-        ];
+        let {suggestions} = this.state;
+        let suggestonsBoxClass = classNames({
+            'query-suggestions': true,
+            'visible' : suggestions.length !== undefined,
+        });
 
         return (
             <div>
@@ -73,17 +75,26 @@ class BasicSearch extends React.Component {
                                 this._onChange(newValue);                           
                             }
                         }
+                        value={this.state.query}
                     />
-                    <div className="query-suggestions">
+                    <div className={suggestonsBoxClass}>
                         <FocusZone direction={FocusZoneDirection.vertical}>
                             <List
                                 className="query-suggestions-list"
-                                items={searchSuggestions}
+                                items={suggestions}
                                 onRenderCell={(item, key) => (
                                     <div
                                         id={'item-' + key} 
-                                        className="query-suggestions-list-item">
-                                        { item.term }
+                                        className="query-suggestions-list-item"
+                                        onClick={(e) => {
+                                            //console.log(item.Query);
+                                            e.preventDefault();
+                                            this.setState({
+                                                query: item.Query,
+                                                suggestions: {}
+                                            });
+                                        }}>
+                                        { item.Query }
                                     </div>
                                 )}
                             />

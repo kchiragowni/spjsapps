@@ -1,15 +1,15 @@
 import * as types from '../constants/actionTypes';
 import { getQuerySuggestions } from '../utlits/spBaseService';
 
-export function loadQuerySuggestionsSuccess(suggestions) {
-    return { type: types.LOAD_QUERY_SUGGESTIONS_SUCCESS, suggestions };
+export function loadQuerySuggestionsSuccess(querySuggestions) {
+    return { type: types.LOAD_QUERY_SUGGESTIONS_SUCCESS, querySuggestions };
 }
 
-export function loadQuerySuggestions(){
+export function loadQuerySuggestions(query){
     return function(dispatch) {
-        return getQuerySuggestions()
-            .then((suggestions) => {
-                dispatch(loadQuerySuggestionsSuccess(suggestions))
+        return getQuerySuggestions(query)
+            .then((querySuggestions) => {
+                dispatch(loadQuerySuggestionsSuccess(querySuggestions.d.suggest.Queries.results));
             })
             .catch((error) => {
                 throw error;
