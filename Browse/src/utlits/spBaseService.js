@@ -37,7 +37,7 @@ export function getQueryResultsSuggestions() {
 
 export function getQuerySuggestions(query){
     let siteurl = _spPageContextInfo.webAbsoluteUrl;
-    let addParams = "&fhithighlighting=false&fcapitalizefirstletters=false&fprefixmatchallterms=false";
+    let addParams = "&fhithighlighting=false&fcapitalizefirstletters=false&fprefixmatchallterms=true";
        
     return $.ajax({
         url: siteurl + "/_api/search/suggest?querytext='"+ query +"'" + addParams,
