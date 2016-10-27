@@ -35,3 +35,5 @@ This will run the automated build process, start up a webserver, and open the ap
 
 ## Questions?
 Check out the [FAQ](/docs/FAQ.md)
+
+## Good luck!
