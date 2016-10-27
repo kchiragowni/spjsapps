@@ -46,7 +46,7 @@ class BasicSearch extends React.Component {
             this.props.getSuggestions(value);
         } else {
             this.setState({
-                suggestions: ''
+                suggestions: undefined
             });
         }
     }
@@ -62,7 +62,7 @@ class BasicSearch extends React.Component {
         let {suggestions} = this.state;
         let suggestonsBoxClass = classNames({
             'query-suggestions': true,
-            'visible' : suggestions.length > 0 && suggestions.length !== undefined,
+            'visible' : suggestions !== undefined && suggestions.length > 0,
         });
 
         return (
