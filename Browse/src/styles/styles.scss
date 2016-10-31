@@ -121,6 +121,7 @@ td.fuel-savings-label { width: 175px; }
             -moz-transition: all .5s ease-in-out;
             -webkit-transition: all .5s ease-in-out;
             transition: all .5s ease-in-out;
+            padding: 5px;
         }
         &:hover .category-content {
             opacity: .75;

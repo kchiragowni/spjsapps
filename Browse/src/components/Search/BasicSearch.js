@@ -67,13 +67,13 @@ class BasicSearch extends React.Component {
 
         return (
             <div>
-                <form onSubmit={
+                <form  autoComplete="off" onSubmit={
                     (e) => {
                         e.preventDefault();
                     }
                 }>
-                    <SearchBox 
-                        labelText="Search resources"
+                    <SearchBox
+                        labelText="Search resource"
                         onChange={
                             (newValue) => {
                                 this._onChange(newValue);                           
