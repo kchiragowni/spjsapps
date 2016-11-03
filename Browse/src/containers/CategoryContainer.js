@@ -10,14 +10,17 @@ class CategoryContainer extends React.Component {
         super(props);
     
         this.state = {
-            categories: objectAssign({}, props.categories)
+            categories: objectAssign({}, props.categories),
+            query: props.query
         };       
     }
 
      render() {
-            let {categories} = this.props;
+            let {categories, query} = this.props;
             return(
-                <CategoryPivot categories={categories}/>
+                <CategoryPivot 
+                    categories={categories}
+                    query= {query} />
             );
         }
 }
@@ -25,6 +28,7 @@ class CategoryContainer extends React.Component {
 function mapStateToProps(state) {
     return {
         categories: state.categories,
+        query: state.query,
         category: 'course'
     };
 }
@@ -36,7 +40,8 @@ function mapDispatchToProps(dispatch) {
 }
 
 CategoryContainer.propTypes = {
-    categories: PropTypes.array.isRequired
+    categories: PropTypes.array.isRequired,
+    query: PropTypes.string.isRequired,
 };
 
 export default connect(

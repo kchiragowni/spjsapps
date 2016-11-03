@@ -13,6 +13,7 @@ class CategoryPivot extends React.Component {
         this._groupSelected = this._groupSelected.bind(this);
         this.state = {
             categories: props.categories,
+            query: props.query,
             groupSelected: GetUrlKeyValue("category", false, location.href)
         };
     }
@@ -27,6 +28,7 @@ class CategoryPivot extends React.Component {
     render(){
 
         let { categories } = this.state.categories.length > 0 ? this.state : this.props;
+        let { query } = this.props; 
         let groupName = this.state.groupSelected !== '' ? this.state.groupSelected : 'bespoke';
             
 
@@ -70,21 +72,21 @@ class CategoryPivot extends React.Component {
                                 ariaLabel='Bespoke category'
                                 itemCount={_besokeCategories.length}
                                 itemKey="bespoke">
-                                <CategoriesPivot categories={_besokeCategories} group={'bespoke'}/>
+                                <CategoriesPivot categories={_besokeCategories} group={'bespoke'} query={query}/>
                             </PivotItem>
                             <PivotItem 
                                 linkText="Course" 
                                 ariaLabel='Course category'
                                 itemCount={_courseCategories.length}
                                 itemKey="course">
-                                <CategoriesPivot categories={_courseCategories} group={'course'}/>
+                                <CategoriesPivot categories={_courseCategories} group={'course'} query={query}/>
                             </PivotItem>
                             <PivotItem 
                                 linkText="Topics" 
                                 ariaLabel='Topics category'
                                 itemCount={_topicsCategories.length}
                                 itemKey="topic">
-                                <CategoriesPivot categories={_topicsCategories} group={'topic'}/>
+                                <CategoriesPivot categories={_topicsCategories} group={'topic'} query={query}/>
                             </PivotItem>
                         </Pivot>
                     </div> 
@@ -95,7 +97,8 @@ class CategoryPivot extends React.Component {
 }
 
 CategoryPivot.propTypes = {
-    categories: PropTypes.array.isRequired
+    categories: PropTypes.array.isRequired,
+    query: PropTypes.string.isRequired,
 };
 
 export default CategoryPivot;

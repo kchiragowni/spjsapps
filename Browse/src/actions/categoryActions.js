@@ -19,7 +19,7 @@ export function loadCategories() {
 }
 
 export function loadRemoteCategories(){ 
-    let columns = ['ID', 'Title', 'Description', 'Group', 'ResourcesCount']; 
+    let columns = ['ID', 'Title', 'Description', 'Group', 'ResourcesCount', 'MetaID']; 
     return function (dispatch) {
         return services.getRequest('Navigation', columns)
             .then((categories) => {

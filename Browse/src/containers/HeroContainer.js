@@ -18,7 +18,8 @@ class HeroContainer extends React.Component {
                 <div className="ms-Grid-col ms-u-sm8 ms-u-lg87">
                     <BasicSearch
                         suggestions={suggestions}
-                        getSuggestions={this.props.actions.loadQuerySuggestions}/>
+                        getSuggestions={this.props.actions.loadQuerySuggestions}
+                        queryUpate={this.props.actions.updateQuery}/>
                 </div>
                     <div className="ms-Grid-col ms-u-sm4 ms-u-l4">
                     <AdvancedSearch/>
@@ -30,7 +31,8 @@ class HeroContainer extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        suggestions: state.querySuggestions
+        suggestions: state.querySuggestions,
+        query: state.query
     };
 }
 
@@ -42,6 +44,7 @@ function mapDispatchToProps(dispatch) {
 
 HeroContainer.propTypes = {
     suggestions: PropTypes.array.isRequired,
+    query: PropTypes.string.isRequired,
     actions: PropTypes.object.isRequired
 };
 

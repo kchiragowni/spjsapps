@@ -1,5 +1,6 @@
 export default {
     contracts: [],
     categories: [],
-    querySuggestions: []
+    querySuggestions: [],
+    query: '*'
 };

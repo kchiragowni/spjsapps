@@ -15,7 +15,8 @@ class BasicSearch extends React.Component {
         this.state = {
             labelText: 'Search',
             suggestions: Object.assign({}, props.suggestions),
-            query: ''
+            query: '',
+            thisSite: 'https%3A%2F%2Fcambridgeassessment%2Esharepoint%2Ecom%2Fsites%2Fcan'
         };
     }
 
@@ -44,6 +45,7 @@ class BasicSearch extends React.Component {
 
         if(value.length > 3) {
             this.props.getSuggestions(value);
+            this.props.queryUpate(this.state.query);
         } else {
             this.setState({
                 suggestions: undefined
@@ -70,6 +72,7 @@ class BasicSearch extends React.Component {
                 <form  autoComplete="off" onSubmit={
                     (e) => {
                         e.preventDefault();
+                        window.location.href = `/sites/can/search/Pages/results.aspx?u=${this.state.thisSite}&k=${this.state.query}`;   
                     }
                 }>
                     <SearchBox
@@ -97,6 +100,7 @@ class BasicSearch extends React.Component {
                                                 query: item.Query,
                                                 suggestions: {}
                                             });
+                                            this.props.queryUpate(item.Query);
                                         }}>
                                         { item.Query }
                                     </div>
@@ -112,7 +116,8 @@ class BasicSearch extends React.Component {
 
 BasicSearch.propTypes = {
     suggestions: PropTypes.array.isRequired,
-    getSuggestions: PropTypes.func.isRequired
+    getSuggestions: PropTypes.func.isRequired,
+    queryUpate: PropTypes.func.isRequired
 };
 
 export default BasicSearch;

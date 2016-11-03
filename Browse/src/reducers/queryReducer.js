@@ -10,3 +10,12 @@ export default function querySuggestionsReducer(state = initialState.querySugges
             return state;
     }
 } 
+
+export function queryReducer(state = initialState.query, action) {
+    switch(action.type) {
+        case types.UPDATE_QUERY_SUCCESS:
+            return action.query;
+        default:
+            return state;
+    }
+} 

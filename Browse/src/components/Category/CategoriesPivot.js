@@ -30,6 +30,7 @@ class CategoriesPivot extends React.Component {
             filterText: '',
             categories: props.categories,
             group: props.group,
+            query: props.query,
             showDialog: false
         };
     }
@@ -45,6 +46,11 @@ class CategoriesPivot extends React.Component {
 
     _showDialog() {
         this.setState( {showDialog: true } );
+    }
+
+    _getResources(metaID) {
+        let { query } = this.props;
+        window.location.href = `/sites/can/search/Pages/results.aspx?u=https%3A%2F%2Fcambridgeassessment%2Esharepoint%2Ecom%2Fsites%2Fcan&k=Journal#k=${query}%20owstaxIdCourse%3A'GTSet%7C%23${metaID}'`;
     }
 
     _closeDialog() {
@@ -67,7 +73,7 @@ class CategoriesPivot extends React.Component {
                 <div className={masonaryClass}>                    
                 {categories.map(category => 
                     <div key={category.ID} className="item">
-                        <div className="category-content" onClick={this._showDialog.bind(this)}>
+                        <div className="category-content" onClick={this._getResources.bind(this, category.MetaID)}>
                             <h3 className="ms-fontSize-mPlus ms-fontWeight-semibold">{category.Title}</h3>
                             <div className="ms-fontSize-mPlus">{category.Description}</div>
                             <div className="ms-fontSize-mPlus ms-u-textAlignRight">
@@ -87,7 +93,7 @@ class CategoriesPivot extends React.Component {
                     isBlocking={true}
                     closeButtonAriaLabel="Close"
                     >
-                        <div>Dialog content...</div>
+                        <div>Dialog content..</div>
                     
                 </Dialog>
             </div>
@@ -97,7 +103,8 @@ class CategoriesPivot extends React.Component {
 
 CategoriesPivot.propTypes = {
     categories: PropTypes.array.isRequired,
-    group: PropTypes.string.isRequired
+    group: PropTypes.string.isRequired,
+    query: PropTypes.string.isRequired
 };
 
 export default CategoriesPivot;
