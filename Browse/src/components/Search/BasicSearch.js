@@ -72,7 +72,7 @@ class BasicSearch extends React.Component {
                 <form  autoComplete="off" onSubmit={
                     (e) => {
                         e.preventDefault();
-                        window.location.href = `/sites/can/search/Pages/results.aspx?u=${this.state.thisSite}&k=${this.state.query}`;   
+                        window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?u=${this.state.thisSite}&k=${this.state.query}`;   
                     }
                 }>
                     <SearchBox
