@@ -4,6 +4,16 @@
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.2.2.tgz#fa2fa1ca9c4f0c49623e2e48ad3ba30524495867"
 
+"@types/react-dom@^0.14.18":
+  version "0.14.19"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-0.14.19.tgz#698a14335e32fb1bc61db65f5647c9668a7fc2eb"
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^0.14.41":
+  version "0.14.51"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-0.14.51.tgz#7bb70a087632a91cc2121dd5aecc2da268b74afe"
+
 abab@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.3.tgz#b81de5f7274ec4e756d797cd834f303642724e5d"
@@ -4160,11 +4170,13 @@ object.values@^1.0.3:
     function-bind "^1.0.2"
     has "^1.0.1"
 
-office-ui-fabric-react@0.55.2:
-  version "0.55.2"
-  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-0.55.2.tgz#da5a449bcf50d2c5bde09de309d18ea01bb93297"
+office-ui-fabric-react@^0.78.1:
+  version "0.78.1"
+  resolved "https://registry.yarnpkg.com/office-ui-fabric-react/-/office-ui-fabric-react-0.78.1.tgz#2085ae8ff3e7baddb5ac230d416ef2d19281b2eb"
   dependencies:
     "@microsoft/load-themed-styles" "^1.2.2"
+    "@types/react" "^0.14.41"
+    "@types/react-dom" "^0.14.18"
     color-functions "^1.1.0"
 
 on-finished@~2.3.0:

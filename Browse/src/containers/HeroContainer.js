@@ -12,7 +12,7 @@ class HeroContainer extends React.Component {
     }
 
     render() {
-        let {suggestions} = this.props;
+        let {suggestions, categories} = this.props;
         return(
             <div className="ms-Grid-row searchbox">
                 <div className="ms-Grid-col ms-u-sm8 ms-u-lg87">
@@ -22,7 +22,9 @@ class HeroContainer extends React.Component {
                         queryUpate={this.props.actions.updateQuery}/>
                 </div>
                     <div className="ms-Grid-col ms-u-sm4 ms-u-l4">
-                    <AdvancedSearch/>
+                    <AdvancedSearch
+                        categories={categories}
+                    />
                 </div>
             </div>
         );
@@ -32,7 +34,8 @@ class HeroContainer extends React.Component {
 function mapStateToProps(state) {
     return {
         suggestions: state.querySuggestions,
-        query: state.query
+        query: state.query,
+        categories: state.categories
     };
 }
 
@@ -45,7 +48,8 @@ function mapDispatchToProps(dispatch) {
 HeroContainer.propTypes = {
     suggestions: PropTypes.array.isRequired,
     query: PropTypes.string.isRequired,
-    actions: PropTypes.object.isRequired
+    actions: PropTypes.object.isRequired,
+    categories: PropTypes.array.isRequired
 };
 
 export default connect(

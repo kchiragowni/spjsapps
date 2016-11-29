@@ -1,47 +1,69 @@
-import * as React from 'react';
+import React, { PropTypes } from 'react';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
-import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
+//import { ChoiceGroup } from 'office-ui-fabric-react/lib/ChoiceGroup';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
-import {Dropdown} from 'office-ui-fabric-react/lib/Dropdown';
+import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown';
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
+import { TagPicker } from 'office-ui-fabric-react/lib/Pickers';
+import { FocusTrapZone } from 'office-ui-fabric-react/lib/FocusTrapZone';
+import { Label } from 'office-ui-fabric-react/lib/Label';
 
 class AdvancedSearch extends React.Component {
-
   constructor(props, context) {
     super(props, context);
-
     this.state = {
+      categories: Object.assign({}, props.categories),
       showDialog: false,
       searchText: '',
+      bespokeKey: '',
       courseKey:'',
       levelKey:'',
       typeKey:'',
+      isBespokeVisible: false,
+      isCourseVisible: false,
+      isTopicVisible: false,
+      isLevelVisible: false,
+      isResourceTypeVisible: false,
       thisSite: 'https%3A%2F%2Fcambridgeassessment%2Esharepoint%2Ecom%2Fsites%2Fcan'
     };
-
     this._showDialog = this._showDialog.bind(this);
-    
+    this._getErrorMessage = this._getErrorMessage.bind(this);
   }
+
+  componentWillReceiveProps(nextPrpos) {
+        this.setState({
+            categories: nextPrpos.categories
+        });
+    }
 
   _onChangedKeyword(text){
     this.setState({
         searchText: text
-        //courseKey: option.key
-    });    
-    //alert(option.key);
+    });  
   }
 
-  _onChanged(object){
-      console.log(object.key);
-      /*this.setState({
-          courseKey: object.key
-      });*/
-    }
+  _getErrorMessage(value){
+      return value.length == 0 ? 'The length of the input value should be greater than 3' : ''; 
+  }
+  _onchangedBespoke(object){
+      this.setState({
+          bespokeKey: object.key
+      });
+  }
 
-    _onChangedResourseLevel(object){
-      this.setState({levelKey: object.key});
-    }
+  _onChangedCourse(object){
+      this.setState({
+          courseKey: object.key
+      });
+  }
+
+  _onChangedResourseLevel(object){
+      this.setState({
+          levelKey: object.key
+      });
+  }
 
   _showDialog() {
     this.setState( {showDialog: true } );
@@ -58,25 +80,57 @@ class AdvancedSearch extends React.Component {
   _performSearch(){
       window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?u=${this.state.thisSite}&k=${this.state.searchText}%20owstaxIdCourse:'GTSet|#${this.state.courseKey}&refinementfilters='filetype:equals("pdf")'`;
   }
+
+   _onFilterChanged(filterText, tagList) {
+    let _resourceTypeTags = [
+            'Word',
+            'PDF',
+            'Excel',
+            'Powerpoint'
+            ].map(item => ({ key: item, name: item }));
+    return filterText ? _resourceTypeTags.filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0).filter(item => !this._listContainsTag(item, tagList)) : [];
+  }
+
+  _onTopicFilterChanged(filterText, tagList) {
+    let { categories } = this.state;
+    let _topicsTags = categories.filter(category => category.Group.toLowerCase() === 'topic').map(category => ({ key: category.MetaID, name: category.Title }));
+    return filterText ? _topicsTags.filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0).filter(item => !this._listContainsTag(item, tagList)) : [];
+  }
+
+  _onResourceLevelFilterChanged(filterText, tagList) {
+    let { categories } = this.state;
+    let _resourceLevelTags = categories.filter(category => category.Group.toLowerCase() === 'resource level').map(category => ({ key: category.MetaID, name: category.Title }));
+    
+    return filterText ? _resourceLevelTags.filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0).filter(item => !this._listContainsTag(item, tagList)) : [];
+  }
+
+  _listContainsTag(tag, tagList) {
+    if (!tagList || !tagList.length || tagList.length === 0) {
+      return false;
+    }
+    return tagList.filter(compareTag => compareTag.key === tag.key).length > 0;
+  }
+
   render() {
     const linkDivStyle = {
             marginTop: '5px',
             marginLeft: '-20px'
     };
+
+    let {isBespokeVisible: bespokeVisible, isCourseVisible: courseVisible, 
+            isLevelVisible: levelVisible, isResourceTypeVisible: resourceTypeVisible, 
+            isTopicVisible: topicVisible} = this.state;
+    
     return (
         <div>
-            <form  autoComplete="off" onSubmit={
-                    (e) => {
-                        e.preventDefault();
-                        window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?u=${this.state.thisSite}&k=${this.state.searchText}%20owstaxIdCourse:'GTSet|#${this.state.courseKey}'`;   
-                    }
-                }>
+            <form autoComplete="off" autoCorrect="off">
                 <div className="ms-Grid-col ms-u-sm8 ms-u-md8 ms-u-lg8">
                     <Button 
                         description="Opens the Advanced Search Dialog" 
                         buttonType= {ButtonType.normal}
                         onClick={(ev) => {
                             ev.preventDefault();
+                            // clear basic search                              
                             this._showDialog();}}
                         onLayerMounted={( )=> {return true;}}
                         >
@@ -88,65 +142,113 @@ class AdvancedSearch extends React.Component {
                         onDismiss={this._closeDialog.bind(this)}
                         title="Advanced Search"
                         subText="Find resources that have.."
-                        isBlocking={false}
+                        isBlocking={true}
                         isDarkOverlay={true}
+                        containerClassName="ms-dialogMainOverride"
                     >
-                    <TextField 
+                    <TextField
                         placeholder="Search with keywords" 
                         ariaLabel="Please enter text here" 
-                        required={true} 
+                        required={true}
                         onChanged={this._onChangedKeyword.bind(this)} 
-                    />                
-                    <Dropdown
-                        id="owstaxIdCourse"
-                        label="Course:"
-                        options={
-                            [
-                                { key: '941cf3fa-f7f9-40c7-b2c2-9e66eba01c58', text: 'Certificate in the Principles and Practice of Assessment' },
-                                { key: '2c75d6f8-7633-423a-9db2-fbea994e61c3', text: 'Concepts and Contexts of assessment' },
-                                { key: 'c4a9a7e6-8664-4c82-a6d9-7d7ff089bee3', text: 'Connecting with Assessment' },
-                                { key: '16f83ef7-3e82-4807-ac2c-d776cdd11a8c', text: 'Introduction to Assessment online' },
-                                { key: '50b49aae-adf2-49db-b8c4-2c61a479ba2f', text: 'PGCEA' },                        
-                            ]
-                        }
-                        onChanged={this._onChanged.bind(this)}
                     />
-                    <Dropdown
-                        id="owstaxIdResourceLevel"
-                        label="Resource level:"
-                        options={
-                            [
-                                { key: '10ef57a1-05c7-4b3f-9db0-314f312574b8', text: 'Discovery' },
-                                { key: '00fb0ca2-7a0b-42c0-ae0a-63016ec8fcab', text: 'Mastery' },
-                                { key: '972dd0d7-3bd1-4bda-8877-6ce5eda73799', text: 'Professional' }                  
-                            ]
+                    <Toggle
+                        checked={bespokeVisible}
+                        label="Select Bespoke"
+                        disabled={courseVisible}
+                        onChanged={isBespokeVisible => this.setState({ isBespokeVisible })}
+                        onText="No"
+                        offText="Yes" />
+                    {(() => {
+                        let { isBespokeVisible } = this.state;
+                        if (isBespokeVisible) {
+                            let { categories } = this.state;
+                            let _bespokeOptions = categories.filter(category => category.Group.toLowerCase() === 'bespoke').map(category => ({ key: category.MetaID, text: category.Title }));
+                            return (
+                                <Dropdown
+                                    options={_bespokeOptions}
+                                    onChanged={this._onchangedBespoke.bind(this)}
+                                />
+                            );
                         }
-                        onChanged={this._onChangedResourseLevel.bind(this)}
-                    />
-
-                    <ChoiceGroup
-                        label="Resourse type"
-                        options={[
-                            {
-                                key: 'pdf',
-                                text: 'PDF'
-                            },
-                            {
-                                key: 'word-docs',
-                                text: 'Word Documents',
-                                isChecked: true
-                            },
-                            {
-                                key: 'pptx',
-                                text: 'Powerpoint presentation',
-                                isDisabled: true
+                    })()}
+                    <Toggle
+                        checked={courseVisible}
+                        label="Select Course"
+                        disabled={bespokeVisible}
+                        onChanged={isCourseVisible => this.setState({ isCourseVisible })}
+                        onText="No"
+                        offText="Yes" />
+                     {(() => {
+                        let { isCourseVisible } = this.state;
+                        if (isCourseVisible) {
+                             let { categories } = this.state;
+                            let _courseOptions = categories.filter(category => category.Group.toLowerCase() === 'course').map(category => ({ key: category.MetaID, text: category.Title }));
+                            return (
+                                <Dropdown
+                                    label="Course:"
+                                    options={ _courseOptions }
+                                    onChanged={this._onChangedCourse.bind(this)}
+                                />
+                            )
+                        }
+                     })()}
+                     <Label>Select Topics</Label>
+                    <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
+                        <TagPicker 
+                            onResolveSuggestions={this._onTopicFilterChanged.bind(this)}
+                            getTextFromItem= {(item) => { return item.name;}}
+                            pickerSuggestionsProps={
+                                {
+                                    suggestionsHeaderText: 'Suggested Topics',
+                                    noResultsFoundText: 'No Topics Tag Found',
+                                    loadingText: 'Loading topics..'
+                                }
                             }
-                        ]}
-                        onChanged={this._onChoiceChanged}
-                    />
+                        />
+                    </FocusTrapZone>
+                    <Label>Select Resource level</Label>
+                    <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
+                        <TagPicker
+                            onResolveSuggestions={this._onResourceLevelFilterChanged.bind(this)}
+                            getTextFromItem= {(item) => { return item.name; }}
+                            pickerSuggestionsProps={
+                                {
+                                    suggestionsHeaderText: 'Suggested Tags',
+                                    noResultsFoundText: 'No File type Tags Found',
+                                    loadingText: 'Loading levels..'
+                                }
+                            }
+                        />
+                    </FocusTrapZone>
+                    <Toggle
+                        checked={resourceTypeVisible}
+                        label="Select Resource type"
+                        onChanged={isResourceTypeVisible => this.setState({ isResourceTypeVisible })}
+                        onText="Visible"
+                        offText="Hidden" />
+                     {(() => {
+                        let { isResourceTypeVisible } = this.state;
+                        if (isResourceTypeVisible) {
+                            return (      
+                                <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
+                                    <TagPicker
+                                        onResolveSuggestions={this._onFilterChanged.bind(this)}
+                                        getTextFromItem= {(item) => { return item.name; }}
+                                        pickerSuggestionsProps={
+                                            {
+                                                suggestionsHeaderText: 'Suggested Tags',
+                                                noResultsFoundText: 'No File type Tags Found'
+                                            }
+                                        }
+                                    />
+                                </FocusTrapZone>
+                            );
+                        }
+                     }
+                     )()}
                     <DialogFooter>
                         <Button buttonType={ButtonType.primary} onClick={this._performSearch.bind(this)}>Search</Button>
-                        <Button buttonType={ButtonType} onClick={this._closeDialog.bind(this)}>Save</Button>
                         <Button onClick={this._closeDialog.bind(this)}>Cancel</Button>
                     </DialogFooter>
                     </Dialog>
@@ -163,5 +265,8 @@ class AdvancedSearch extends React.Component {
   }
 }
 
+AdvancedSearch.propTypes = {
+    categories: PropTypes.array.isRequired
+};
 
 export default AdvancedSearch;

@@ -6,11 +6,12 @@ import { FocusZone, FocusZoneDirection } from 'office-ui-fabric-react/lib/FocusZ
 //import { Pivot, PivotItem, PivotLinkSize, PivotLinkFormat } from 'office-ui-fabric-react/lib/Pivot';
 //import SearchExtended from './SearchExtended';
 import classNames from 'classnames';
+//import { autobind } from 'office-ui-fabric-react/lib/utilities/autobind';
 class BasicSearch extends React.Component {
     constructor(props){
         super(props);
 
-        //this.onChange = this.onChange.bind(this);    
+        //this._onSearch = this._onSearch.bind(this);    
         this._onChange = this._onChange.bind(this);    
         this.state = {
             labelText: 'Search',
@@ -52,6 +53,11 @@ class BasicSearch extends React.Component {
             });
         }
     }
+    //@autobind
+    _onSearch(value){
+        window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?u=${this.state.thisSite}&k=${value}`;
+    }
+
     search(ele) {
         alert('onKeydown');
         //ele.preventDefault();
@@ -69,46 +75,51 @@ class BasicSearch extends React.Component {
 
         return (
             <div>
-                <form  autoComplete="off" onSubmit={
-                    (e) => {
-                        e.preventDefault();
-                        window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?u=${this.state.thisSite}&k=${this.state.query}`;   
-                    }
-                }>
-                    <SearchBox
-                        labelText="Search resource"
-                        onChange={
-                            (newValue) => {
-                                this._onChange(newValue);                           
+                <FocusZone
+                    className='ms-FocusZone'
+                    direction={ FocusZoneDirection.vertical }>
+                    <form autoComplete="off">
+                        <SearchBox
+                            labelText="Search resource"
+                            onChange={
+                                (newValue) => {
+                                    this._onChange(newValue);                           
+                                }
                             }
-                        }
-                        value={this.state.query}
-                    />
-                    <div className={suggestonsBoxClass}>
-                        <FocusZone direction={FocusZoneDirection.vertical}>
-                            <List
-                                className="query-suggestions-list"
-                                items={suggestions}
-                                onRenderCell={(item, key) => (
-                                    <div
-                                        id={'item-' + key} 
-                                        className="query-suggestions-list-item"
-                                        onClick={(e) => {
-                                            //console.log(item.Query);
-                                            e.preventDefault();
-                                            this.setState({
-                                                query: item.Query,
-                                                suggestions: {}
-                                            });
-                                            this.props.queryUpate(item.Query);
-                                        }}>
-                                        { item.Query }
-                                    </div>
-                                )}
-                            />
-                        </FocusZone>
-                    </div>
-                </form>
+                            onSearch={
+                                (newValue) => {
+                                    this._onSearch(newValue);
+                                }
+                            }
+                            value={this.state.query}
+                        />
+                        <div className={suggestonsBoxClass}>
+                            <FocusZone direction={FocusZoneDirection.vertical}>
+                                <List
+                                    className="query-suggestions-list"
+                                    items={suggestions}
+                                    onRenderCell={(item, key) => (
+                                        <div
+                                            id={'item-' + key} 
+                                            className="query-suggestions-list-item"
+                                            onClick={(e) => {
+                                                //console.log(item.Query);
+                                                e.preventDefault();
+                                                this.setState({
+                                                    query: item.Query,
+                                                    suggestions: {}
+                                                });
+                                                this.props.queryUpate(item.Query);
+                                                document.getElementById('SearchBox0').focus();
+                                            }}>
+                                            { item.Query }
+                                        </div>
+                                    )}
+                                />
+                            </FocusZone>
+                        </div>
+                    </form>
+                </FocusZone>
             </div>
         );
     }
