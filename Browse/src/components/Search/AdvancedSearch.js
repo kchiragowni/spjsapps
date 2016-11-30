@@ -16,20 +16,25 @@ class AdvancedSearch extends React.Component {
     this.state = {
       categories: Object.assign({}, props.categories),
       showDialog: false,
-      searchText: '',
+      queryText: '',
+      topicKey: '',
       bespokeKey: '',
-      courseKey:'',
+      courseKey: '',
       levelKey:'',
-      typeKey:'',
+      topicKeys: [],
+      typeKeys:[],
       isBespokeVisible: false,
       isCourseVisible: false,
       isTopicVisible: false,
-      isLevelVisible: false,
+      isResourceLevelVisible: false,
       isResourceTypeVisible: false,
-      thisSite: 'https%3A%2F%2Fcambridgeassessment%2Esharepoint%2Ecom%2Fsites%2Fcan'
+      /*eslint-disable no-undef*/
+      thisSite: process.env.NODE_ENV === 'production' ? _spPageContextInfo.webAbsoluteUrl : ''
+      /*enlint-enable no-undef*/
     };
     this._showDialog = this._showDialog.bind(this);
     this._getErrorMessage = this._getErrorMessage.bind(this);
+    this._getFileParams = this._getFileParams.bind(this);
   }
 
   componentWillReceiveProps(nextPrpos) {
@@ -40,13 +45,20 @@ class AdvancedSearch extends React.Component {
 
   _onChangedKeyword(text){
     this.setState({
-        searchText: text
+        queryText: text
     });  
   }
 
   _getErrorMessage(value){
       return value.length == 0 ? 'The length of the input value should be greater than 3' : ''; 
   }
+
+  _onchangedTopic(object){
+      this.setState({
+          topicKey: object.text
+      });
+  }
+
   _onchangedBespoke(object){
       this.setState({
           bespokeKey: object.key
@@ -55,7 +67,7 @@ class AdvancedSearch extends React.Component {
 
   _onChangedCourse(object){
       this.setState({
-          courseKey: object.key
+          courseKey: object.text
       });
   }
 
@@ -77,19 +89,123 @@ class AdvancedSearch extends React.Component {
     console.log( 'Choice option change' );
   }
 
-  _performSearch(){
-      window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?u=${this.state.thisSite}&k=${this.state.searchText}%20owstaxIdCourse:'GTSet|#${this.state.courseKey}&refinementfilters='filetype:equals("pdf")'`;
+  _getFileParams(exts){
+      let files = '';
+      for(let [index, value] of exts.entries()) {
+          if(index > 0)
+            files += `%2C`;
+          files += `%22equals(%5C%22${value}%5C%22)%22`;
+      }
+      return files;
   }
+
+  _refinementFilter(refinerName, refinerTokens, operator, useKQL){
+      return `%7B%22n%22%3A%22${refinerName}%22%2C%22t%22%3A%5B%22%5C%22${refinerTokens}%5C%22%22%5D%2C%22o%22%3A%22${operator}%22%2C%22k%22%3A${useKQL}%2C%22m%22%3Anull%7D`;
+  }
+
+  _performSearch(){
+      let { resourceLevels, fileTypes, topicKey, queryText, thisSite, isTopicVisible, 
+            isCourseVisible, isResourceTypeVisible, isResourceLevelVisible } = this.state;
+      let queryEncode = `u=https://cambridgeassessment.sharepoint.com/sites/can&k=${queryText}&ql=2057`;
+      let files = '';
+      let levels = '';
+      let queryParms = false;
+      let topicRefinerFilter = '';
+      let courseRefinerFilter = '';
+      let resourceTypesRefinerFilter = '';
+      let resourceLevelRefinerFilter = '';
+      
+      if(isTopicVisible && this.state.topicKey !== '') {
+          queryParms = true;
+          topicRefinerFilter += this._refinementFilter('RefinableString153', topicKey, 'or', false);
+      }
+
+      /*if(isCourseVisible && this.state.courseKey !== ''){
+          queryText += `%20owstaxIdCourse%3A%5C%22${this.state.courseKey}%5C%22`;
+      }*/
+
+      if(isCourseVisible && courseKey !== '') {
+          queryParms = true;
+          if(isTopicVisible && this.state.topicKey !== '') {
+            courseRefinerFilter += `%2C`;
+          }
+          courseRefinerFilter += this._refinementFilter('RefinableString152', courseKey, 'or', false); // `%7B%22n%22%3A%22RefinableString152%22%2C%22t%22%3A%5B%22%5C%22${this.state.courseKey}%5C%22%22%5D%2C%22o%22%3A%22or%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D`;
+      }      
+
+      if(isResourceLevelVisible && resourceLevels) {
+          queryParms = true;
+          for(let [index, value] of resourceLevels.entries()) {
+                if(index > 0 && index < resourceLevels.length)
+                    levels += `%5C%22%22%2C%22%5C%22`;
+                levels += `${value.name}`;
+        }
+        if((isTopicVisible && this.state.topicKey !== '') || (isResourceTypeVisible && fileTypes)) {
+            resourceLevelRefinerFilter += `%2C`;
+        }
+        resourceLevelRefinerFilter += this._refinementFilter('RefinableString150', levels, 'or', false); // `%7B%22n%22%3A%22RefinableString150%22%2C%22t%22%3A%5B${levels}%5D%2C%22o%22%3A%22or%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D`; 
+      }
+      const EmailExt = ['eml', 'msg', 'exch'];
+      const ImageExt = ['bmp', 'jpeg', 'png', 'tiff', 'gif', 'ico', 'wpd', 'odg', 'rle', 'wmf', 'dib'];
+      const PDFExt = ['pdf'];
+      const WordExt = ['docx', 'doc', 'docm', 'dot', 'dotx', 'nws'];
+      const PowerPointExt = ['odp', 'ppt', 'pptm', 'pptx', 'potm', 'potx', 'ppam', 'ppsm', 'ppsx'];
+      const ExcelExt = ['odc', 'ods', 'xls', 'xlsb', 'xlsm', 'xlsx', 'xltm', 'xltx'];
+      const WebPageExt = ['HTML', 'MHTML'];
+
+      if(isResourceTypeVisible && fileTypes.length){
+          for(let [index, value] of fileTypes.entries()) {
+              if(index > 0 && index < fileTypes.length )
+                files += `%2C`;
+            switch(value.key) {
+                case 'Email':
+                        files += this._getFileParams(EmailExt);
+                        break;
+                case 'Image':
+                        files += this._getFileParams(ImageExt);
+                        break;
+                case 'PDF':
+                        files += this._getFileParams(PDFExt);
+                        break;
+                case 'Word':
+                        files += this._getFileParams(WordExt); 
+                        break;
+                case 'PowerPoint':
+                        files += this._getFileParams(PowerPointExt);
+                        break;
+                case 'Excel':
+                        files += this._getFileParams(ExcelExt); 
+                        break;
+                case 'Web page':
+                        files += this._getFileParams(WebPageExt);
+                        break;
+                default:
+                        break;
+            }          
+        }
+        if(isTopicVisible && this.state.topicKey !== '') {
+            resourceTypesRefinerFilter += `%2C`;
+        }
+        resourceTypesRefinerFilter += `%7B%22n%22%3A%22FileType%22%2C%22t%22%3A%5B${files}%5D%2C%22o%22%3A%22or%22%2C%22k%22%3Afalse%2C%22m%22%3Anull%7D`; 
+      }      
+      if(queryParms) {
+          queryEncode += `#Default=%7B%22k%22%3A%22${queryText}%22%2C%22r%22%3A%5B${topicRefinerFilter}${courseRefinerFilter}${resourceTypesRefinerFilter}${resourceLevelRefinerFilter}%5D%2C%22l%22%3A2057%7D`;      
+      }
+      window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?${queryEncode}`;
+    }    
 
    _onFilterChanged(filterText, tagList) {
     let _resourceTypeTags = [
-            'Word',
-            'PDF',
+            'Email',
             'Excel',
-            'Powerpoint'
+            'Image',
+            'PDF',
+            'PowerPoint',
+            'Visio',
+            'Web page',            
+            'Word'
             ].map(item => ({ key: item, name: item }));
     return filterText ? _resourceTypeTags.filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0).filter(item => !this._listContainsTag(item, tagList)) : [];
-  }
+  }  
 
   _onTopicFilterChanged(filterText, tagList) {
     let { categories } = this.state;
@@ -97,10 +213,14 @@ class AdvancedSearch extends React.Component {
     return filterText ? _topicsTags.filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0).filter(item => !this._listContainsTag(item, tagList)) : [];
   }
 
+  _onTopicItemChanged(items) {
+      this.setState({
+          topics: items
+      });
+  }
   _onResourceLevelFilterChanged(filterText, tagList) {
     let { categories } = this.state;
     let _resourceLevelTags = categories.filter(category => category.Group.toLowerCase() === 'resource level').map(category => ({ key: category.MetaID, name: category.Title }));
-    
     return filterText ? _resourceLevelTags.filter(tag => tag.name.toLowerCase().indexOf(filterText.toLowerCase()) === 0).filter(item => !this._listContainsTag(item, tagList)) : [];
   }
 
@@ -117,9 +237,9 @@ class AdvancedSearch extends React.Component {
             marginLeft: '-20px'
     };
 
-    let {isBespokeVisible: bespokeVisible, isCourseVisible: courseVisible, 
-            isLevelVisible: levelVisible, isResourceTypeVisible: resourceTypeVisible, 
-            isTopicVisible: topicVisible} = this.state;
+    let { isTopicVisible: topicVisible, isBespokeVisible: bespokeVisible, 
+            isCourseVisible: courseVisible, isResourceLevelVisible: resourceLevelVisible, 
+            isResourceTypeVisible: resourceTypeVisible} = this.state;
     
     return (
         <div>
@@ -153,6 +273,80 @@ class AdvancedSearch extends React.Component {
                         onChanged={this._onChangedKeyword.bind(this)} 
                     />
                     <Toggle
+                        checked={topicVisible}
+                        label="Select Topic"
+                        onChanged={isTopicVisible => this.setState({ isTopicVisible })}
+                        onText="No"
+                        offText="Yes" />
+                    {(() => {
+                        let { isTopicVisible } = this.state;
+                        if (isTopicVisible) {
+                            let { categories } = this.state;
+                            let _topicOptions = categories.filter(category => category.Group.toLowerCase() === 'topic').map(category => ({ key: category.MetaID, text: category.Title }));
+                            return (
+                                <Dropdown
+                                    options={_topicOptions}
+                                    onChanged={this._onchangedTopic.bind(this)}
+                                />
+                            );
+                        }
+                    })()}                                      
+                    <Label>Enter Resource type/s <i>(e.g. Word, PDF)</i></Label>
+                    <Toggle
+                        checked={resourceTypeVisible}
+                        onChanged={isResourceTypeVisible => this.setState({ isResourceTypeVisible })}
+                        onText="No"
+                        offText="Yes" />
+                     {(() => {
+                        let { isResourceTypeVisible } = this.state;
+                        if (isResourceTypeVisible) {
+                            return (      
+                                <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
+                                    <TagPicker
+                                        onResolveSuggestions={this._onFilterChanged.bind(this)}
+                                        getTextFromItem= {(item) => { return item.name; }}
+                                        onChange={(items) => {this.setState({fileTypes: items})}}
+                                        pickerSuggestionsProps={
+                                            {
+                                                suggestionsHeaderText: 'Suggested Tags',
+                                                noResultsFoundText: 'No File type Tags Found'
+                                            }
+                                        }
+                                    />
+                                </FocusTrapZone>
+                            );
+                        }
+                     }
+                     )()}
+                     <Label>Enter Resource level/s <i>(e.g. Discover, Mastery)</i></Label>                    
+                    <Toggle
+                        checked={resourceLevelVisible}
+                        onChanged={isResourceLevelVisible => this.setState({ isResourceLevelVisible })}
+                        onText="No"
+                        offText="Yes" />
+                     {(() => {
+                        let { isResourceLevelVisible } = this.state;
+                        if (isResourceLevelVisible) {
+                            return (      
+                                 <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
+                                    <TagPicker
+                                        onResolveSuggestions={this._onResourceLevelFilterChanged.bind(this)}
+                                        getTextFromItem= {(item) => { return item.name; }}
+                                        onChange={(items) => {this.setState({resourceLevels: items})}}
+                                        pickerSuggestionsProps={
+                                            {
+                                                suggestionsHeaderText: 'Suggested Tags',
+                                                noResultsFoundText: 'No File type Tags Found',
+                                                loadingText: 'Loading levels..'
+                                            }
+                                        }
+                                    />
+                                </FocusTrapZone>
+                            );
+                        }
+                     }
+                     )()}
+                     <Toggle
                         checked={bespokeVisible}
                         label="Select Bespoke"
                         disabled={courseVisible}
@@ -182,7 +376,7 @@ class AdvancedSearch extends React.Component {
                      {(() => {
                         let { isCourseVisible } = this.state;
                         if (isCourseVisible) {
-                             let { categories } = this.state;
+                            let { categories } = this.state;
                             let _courseOptions = categories.filter(category => category.Group.toLowerCase() === 'course').map(category => ({ key: category.MetaID, text: category.Title }));
                             return (
                                 <Dropdown
@@ -192,61 +386,7 @@ class AdvancedSearch extends React.Component {
                                 />
                             )
                         }
-                     })()}
-                     <Label>Select Topics</Label>
-                    <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
-                        <TagPicker 
-                            onResolveSuggestions={this._onTopicFilterChanged.bind(this)}
-                            getTextFromItem= {(item) => { return item.name;}}
-                            pickerSuggestionsProps={
-                                {
-                                    suggestionsHeaderText: 'Suggested Topics',
-                                    noResultsFoundText: 'No Topics Tag Found',
-                                    loadingText: 'Loading topics..'
-                                }
-                            }
-                        />
-                    </FocusTrapZone>
-                    <Label>Select Resource level</Label>
-                    <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
-                        <TagPicker
-                            onResolveSuggestions={this._onResourceLevelFilterChanged.bind(this)}
-                            getTextFromItem= {(item) => { return item.name; }}
-                            pickerSuggestionsProps={
-                                {
-                                    suggestionsHeaderText: 'Suggested Tags',
-                                    noResultsFoundText: 'No File type Tags Found',
-                                    loadingText: 'Loading levels..'
-                                }
-                            }
-                        />
-                    </FocusTrapZone>
-                    <Toggle
-                        checked={resourceTypeVisible}
-                        label="Select Resource type"
-                        onChanged={isResourceTypeVisible => this.setState({ isResourceTypeVisible })}
-                        onText="Visible"
-                        offText="Hidden" />
-                     {(() => {
-                        let { isResourceTypeVisible } = this.state;
-                        if (isResourceTypeVisible) {
-                            return (      
-                                <FocusTrapZone isClickableOutsideFocusTrap={true} forceFocusInsideTrap={false}>
-                                    <TagPicker
-                                        onResolveSuggestions={this._onFilterChanged.bind(this)}
-                                        getTextFromItem= {(item) => { return item.name; }}
-                                        pickerSuggestionsProps={
-                                            {
-                                                suggestionsHeaderText: 'Suggested Tags',
-                                                noResultsFoundText: 'No File type Tags Found'
-                                            }
-                                        }
-                                    />
-                                </FocusTrapZone>
-                            );
-                        }
-                     }
-                     )()}
+                     })()}  
                     <DialogFooter>
                         <Button buttonType={ButtonType.primary} onClick={this._performSearch.bind(this)}>Search</Button>
                         <Button onClick={this._closeDialog.bind(this)}>Cancel</Button>

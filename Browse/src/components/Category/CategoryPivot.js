@@ -29,7 +29,7 @@ class CategoryPivot extends React.Component {
 
         let { categories } = this.state.categories.length > 0 ? this.state : this.props;
         let { query } = this.props; 
-        let groupName = this.state.groupSelected !== '' ? this.state.groupSelected : 'bespoke';
+        let groupName = this.state.groupSelected !== '' ? this.state.groupSelected : 'topic';
             
 
         let _besokeCategories = [], //categories.filter(category => category.Group.toLowerCase() === 'bespoke');
@@ -68,6 +68,13 @@ class CategoryPivot extends React.Component {
                             initialSelectedKey={groupName}
                             onLinkClick={(item) => {this._groupSelected(item);}}>
                             <PivotItem 
+                                linkText="Topics" 
+                                ariaLabel='Topics category'
+                                itemCount={_topicsCategories.length}
+                                itemKey="topic">
+                                <CategoriesPivot categories={_topicsCategories} group={'topic'} query={query}/>
+                            </PivotItem>
+                            <PivotItem 
                                 linkText="Bespoke" 
                                 ariaLabel='Bespoke category'
                                 itemCount={_besokeCategories.length}
@@ -80,14 +87,7 @@ class CategoryPivot extends React.Component {
                                 itemCount={_courseCategories.length}
                                 itemKey="course">
                                 <CategoriesPivot categories={_courseCategories} group={'course'} query={query}/>
-                            </PivotItem>
-                            <PivotItem 
-                                linkText="Topics" 
-                                ariaLabel='Topics category'
-                                itemCount={_topicsCategories.length}
-                                itemKey="topic">
-                                <CategoriesPivot categories={_topicsCategories} group={'topic'} query={query}/>
-                            </PivotItem>
+                            </PivotItem>                            
                         </Pivot>
                     </div> 
                 </div>
