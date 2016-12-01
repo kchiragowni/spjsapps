@@ -8,6 +8,7 @@ import App from './containers/App';
 import configureStore from './store/configureStore';
 import '../node_modules/office-ui-fabric-react/dist/css/fabric.min.css';
 import './styles/styles.scss';
+
 //import '../node_modules/'
 const store = configureStore();
 store.dispatch(loadRemoteCategories());

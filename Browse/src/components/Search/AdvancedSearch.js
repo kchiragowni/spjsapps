@@ -9,6 +9,7 @@ import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { TagPicker } from 'office-ui-fabric-react/lib/Pickers';
 import { FocusTrapZone } from 'office-ui-fabric-react/lib/FocusTrapZone';
 import { Label } from 'office-ui-fabric-react/lib/Label';
+import cookie from 'react-cookie';
 
 class AdvancedSearch extends React.Component {
   constructor(props, context) {
@@ -29,8 +30,9 @@ class AdvancedSearch extends React.Component {
       isResourceLevelVisible: false,
       isResourceTypeVisible: false,
       /*eslint-disable no-undef*/
-      thisSite: process.env.NODE_ENV === 'production' ? _spPageContextInfo.webAbsoluteUrl : ''
+      siteUrl: process.env.NODE_ENV === 'production' ? _spPageContextInfo.webAbsoluteUrl : 'https://cambridgeassessment.sharepoint.com/sites/can/',
       /*enlint-enable no-undef*/
+      recentSearch: cookie.load('recentSearch')
     };
     this._showDialog = this._showDialog.bind(this);
     this._getErrorMessage = this._getErrorMessage.bind(this);
@@ -104,9 +106,9 @@ class AdvancedSearch extends React.Component {
   }
 
   _performSearch(){
-      let { resourceLevels, fileTypes, topicKey, queryText, thisSite, isTopicVisible, 
+      let { resourceLevels, fileTypes, topicKey, queryText, siteUrl, isTopicVisible, 
             isCourseVisible, isResourceTypeVisible, isResourceLevelVisible } = this.state;
-      let queryEncode = `u=https://cambridgeassessment.sharepoint.com/sites/can&k=${queryText}&ql=2057`;
+      let queryEncode = `u=${siteUrl}&k=${queryText}&ql=2057`;
       let files = '';
       let levels = '';
       let queryParms = false;
@@ -190,6 +192,8 @@ class AdvancedSearch extends React.Component {
       if(queryParms) {
           queryEncode += `#Default=%7B%22k%22%3A%22${queryText}%22%2C%22r%22%3A%5B${topicRefinerFilter}${courseRefinerFilter}${resourceTypesRefinerFilter}${resourceLevelRefinerFilter}%5D%2C%22l%22%3A2057%7D`;      
       }
+
+      cookie.save('recentSearch', [queryText, resourceLevels], { path: '/' });
       window.location.href = `/sites/can/_layouts/15/osssearchresults.aspx?${queryEncode}`;
     }    
 
@@ -239,7 +243,7 @@ class AdvancedSearch extends React.Component {
 
     let { isTopicVisible: topicVisible, isBespokeVisible: bespokeVisible, 
             isCourseVisible: courseVisible, isResourceLevelVisible: resourceLevelVisible, 
-            isResourceTypeVisible: resourceTypeVisible} = this.state;
+            isResourceTypeVisible: resourceTypeVisible, recentSearch} = this.state;
     
     return (
         <div>
@@ -384,13 +388,21 @@ class AdvancedSearch extends React.Component {
                                     options={ _courseOptions }
                                     onChanged={this._onChangedCourse.bind(this)}
                                 />
-                            )
+                            );
                         }
                      })()}  
                     <DialogFooter>
                         <Button buttonType={ButtonType.primary} onClick={this._performSearch.bind(this)}>Search</Button>
                         <Button onClick={this._closeDialog.bind(this)}>Cancel</Button>
                     </DialogFooter>
+                    {(() => {
+                        if(recentSearch) {
+                            console.log(cookie.load('recentSearch'));
+                            return (
+                                cookie.load('recentSearch')
+                            );
+                        }
+                    })()}
                     </Dialog>
                 </div>
                 <div className="ms-Grid-col ms-u-sm4 ms-u-md4 ms-u-lg4 ms-u-textAlignLeft" style={linkDivStyle}>
